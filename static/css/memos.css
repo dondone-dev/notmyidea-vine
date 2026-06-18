@@ -1,0 +1,491 @@
+/* Memos 专用样式 - 卡片式备忘录布局 */
+
+/* 覆盖 #content 背景为透明 */
+.memos-section#content {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+/* 隐藏 extras 区域 */
+.memos-section ~ #extras {
+    display: none;
+}
+
+.memos-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.memos-header {
+    text-align: left;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #eceff3;
+}
+
+.memos-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #2f3a46;
+    margin-bottom: 0.2rem;
+}
+
+.memos-subtitle {
+    color: #8b94a1;
+    font-size: 0.92rem;
+    font-style: normal;
+    margin: 0;
+}
+
+.memos-feed-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+    padding: 0.15rem 0 0.7rem 0.9rem;
+    border-bottom: 1px solid #eceff3;
+    position: relative;
+}
+
+.memos-feed-header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    bottom: 0.75rem;
+    width: 3px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #c74350 0%, #e06b75 100%);
+}
+
+.memos-feed-title {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 600;
+    color: #c74350;
+    background: linear-gradient(92deg, #c74350 0%, #e06b75 58%, #b85a63 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.memos-feed-meta {
+    margin: 0;
+    font-size: 0.86rem;
+    color: #8b94a1;
+}
+
+.memos-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* 备忘录卡片 - 扁平化设计 */
+.memo-card {
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+    position: relative;
+    box-shadow: none;
+}
+
+.memo-card::before {
+    display: none;
+}
+
+.memo-header {
+    padding: 0.9rem 1rem 0.35rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.memo-date {
+    font-size: 0.82rem;
+    color: #8b94a1;
+    font-weight: 400;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    white-space: nowrap;
+}
+
+.memo-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.memos-section .memo-tag {
+    font-size: 0.75rem;
+    color: #7a8593;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-weight: 400;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    text-shadow: none;
+    transition: color 0.2s ease;
+}
+
+.memos-section .memo-tag::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: #c74350;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.18s ease;
+}
+
+.memos-section .memo-tag:hover {
+    background: transparent;
+    color: #c74350;
+    transform: none;
+    text-shadow: none;
+}
+
+.memos-section .memo-tag:hover::after {
+    transform: scaleX(1);
+}
+
+.memo-content {
+    padding: 0 1rem 1rem;
+}
+
+.memo-content-text {
+    color: #4b5563;
+    font-size: 1.03rem;
+    line-height: 1.6;
+    margin: 0.5rem 0 1rem 0;
+    font-family: var(--font-sans);
+}
+
+/* 修复图片溢出问题 */
+.memo-content-text img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 10px auto !important;
+}
+
+.memo-content-text p {
+    margin-bottom: 0.8rem;
+}
+
+.memo-content-text p:last-child {
+    margin-bottom: 0;
+}
+
+.memo-content-text h1, 
+.memo-content-text h2, 
+.memo-content-text h3,
+.memo-content-text h4,
+.memo-content-text h5,
+.memo-content-text h6 {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    color: #333;
+}
+
+.memo-content-text code {
+    background: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+}
+
+.memo-content-text pre {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    /* 自定义滚动条样式 */
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f8f9fa;
+}
+
+.memo-content-text pre::-webkit-scrollbar {
+    height: 6px;
+}
+
+.memo-content-text pre::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.memo-content-text pre::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+}
+
+.memo-content-text pre::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+.memo-content-text pre code {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+    color: #212529;
+    font-family: var(--font-mono);
+    white-space: pre;
+    word-break: normal;
+    word-wrap: normal;
+}
+
+.memo-content-text blockquote {
+    border-left: 3px solid #3498db;
+    padding-left: 0.8rem;
+    margin: 0.5rem 0;
+    font-style: italic;
+}
+
+.memo-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.memos-section .memo-read-more {
+    font-size: 0.82rem;
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 400;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    position: relative;
+    text-shadow: none;
+    transition: color 0.2s ease;
+}
+
+.memos-section .memo-read-more::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: #c74350;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.18s ease;
+}
+
+.memos-section .memo-read-more:hover {
+    background: transparent;
+    color: #c74350;
+    text-shadow: none;
+}
+
+.memos-section .memo-read-more:hover::after {
+    transform: scaleX(1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .memos-section {
+        padding: 1.5rem 0.75rem;
+    }
+    
+    .memos-container {
+        gap: 1rem;
+    }
+    
+    .memos-title {
+        font-size: 2rem;
+    }
+
+    .memos-feed-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .memo-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .memo-tags {
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .memos-title {
+        font-size: 1.75rem;
+    }
+    
+    .memo-card {
+        border-radius: 6px;
+    }
+    
+    .memo-content {
+        padding: 0 1rem 1rem;
+    }
+    
+    .memo-content-text pre {
+        padding: 0.75rem;
+        margin: 0.75rem 0;
+        font-size: 0.8rem;
+        border-radius: 4px;
+    }
+}
+
+/* 空状态样式 */
+.memos-section .memos-header + .category-info {
+    text-align: center;
+    color: #95a5a6;
+    font-style: italic;
+    margin-top: 2rem;
+}
+
+/* 分页样式适配 */
+.memos-section .pagination {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.memos-section .pagination a {
+    background: #f8f9fa;
+    border-color: #e9ecef;
+    color: #3498db;
+}
+
+/* 翻页信息样式优化 */
+.memos-section .pagination .page-info {
+    background: none !important;
+    color: #666;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.memos-section .pagination a:hover {
+    background: #3498db;
+    border-color: #3498db;
+    color: white;
+} 
+
+.memo-content-text ul,
+.memo-content-text ol {
+    margin: 0.6rem 0 1.2rem 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.memo-content-text li {
+    position: relative;
+    margin-bottom: 0.6rem;
+    padding-left: 1.6rem;
+    
+    font-size: 1.05rem;   
+    line-height: 1.7;   
+    color: #4a5c6d;    
+}
+
+.memo-content-text li:last-child {
+    margin-bottom: 0;
+}
+
+.memo-content-text ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0.4rem;        
+    
+    top: 0.75rem;         
+    width: 4px;          
+    height: 4px;
+    
+    background-color: #3498db;
+    border-radius: 50%;
+    opacity: 0.8;      
+}
+
+.memo-content-text ul > li:hover::before {
+    transform: scale(1.4);
+    opacity: 1;
+}
+
+.memo-content-text ol {
+    counter-reset: memo-counter;
+}
+
+.memo-content-text ol > li::before {
+    content: counter(memo-counter) ".";
+    counter-increment: memo-counter;
+    position: absolute;
+    left: 0;
+    
+    top: 0.1rem;       
+    font-size: 0.85em;   
+    font-weight: 400;    
+    
+    font-family: var(--font-mono);
+    color: #74b9ff;      
+    width: 1.4rem;
+    text-align: left;
+}
+
+.memo-content-text ol > li:hover::before {
+    color: #3498db;
+}
+
+.memo-content-text ul ul,
+.memo-content-text ol ul,
+.memo-content-text ul ol,
+.memo-content-text ol ol {
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+    margin-left: 0.2rem;  
+}
+
+.memo-content-text ul ul > li::before {
+    background-color: transparent;
+    border: 1px solid #3498db; 
+    box-sizing: border-box;
+    width: 5px;  
+    height: 5px;
+    top: 0.72rem;
+}
+
+.memo-content-text li input[type="checkbox"] {
+    margin-right: 0.5rem;
+    position: absolute;
+    left: 0;
+    top: 0.45rem;
+}
+
+.memo-content-text li:has(input[type="checkbox"]) {
+    padding-left: 1.8rem;
+    list-style: none;
+}
+.memo-content-text li:has(input[type="checkbox"])::before {
+    display: none;
+}

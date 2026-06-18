@@ -1,0 +1,39 @@
+{% macro render(name) %}
+{% if name == 'book-open-text' %}
+<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20"/><path d="M4 5.5V19a2 2 0 0 0 2 2h14"/><path d="M8 3v18"/><path d="M12 7h5"/><path d="M12 11h5"/></svg>
+{% elif name == 'book-copy' %}
+<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 7H20"/><path d="M6.5 7v10"/><path d="M9.5 7v10"/><path d="M13 10h4"/><path d="M13 14h4"/></svg>
+{% elif name == 'clapperboard' %}
+<svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M7 7l3-4"/><path d="M14 7l3-4"/><path d="M7 13h.01"/><path d="M12 13h.01"/><path d="M17 13h.01"/></svg>
+{% elif name == 'circle-play' %}
+<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M10 9.5v5l4-2.5z"/></svg>
+{% elif name == 'file-pen-line' %}
+<svg viewBox="0 0 24 24"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
+{% elif name == 'sparkles' %}
+<svg viewBox="0 0 24 24"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/></svg>
+{% elif name == 'file-text' %}
+<svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M14 3v5h5"/><path d="M9 12h6"/><path d="M9 16h4"/></svg>
+{% elif name == 'chef-hat' %}
+<svg viewBox="0 0 24 24"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15L3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0z"/><path d="M15 15l7 7"/><path d="m.1 23.2 6.4-6.3"/><path d="M19 5l-7 7"/></svg>
+{% elif name == 'tag' %}
+<svg viewBox="0 0 24 24"><path d="M20 10l-8 8-8-8V4h6z"/><circle cx="8.5" cy="8.5" r="1"/></svg>
+{% elif name == 'layout-columns' %}
+<svg viewBox="0 0 24 24"><path d="M4 5h7v14H4z"/><path d="M13 5h7v14h-7z"/></svg>
+{% elif name == 'archive' %}
+<svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+{% elif name == 'users' %}
+<svg viewBox="0 0 24 24"><path d="M16 19v-1a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v1"/><circle cx="10" cy="9" r="3"/><path d="M20 19v-1a3 3 0 0 0-2-2.82"/><path d="M16 6.2a3 3 0 0 1 0 5.6"/></svg>
+{% elif name == 'history' %}
+<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>
+{% elif name == 'link-2' %}
+<svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M11 12l8-8"/><path d="M15 4h4v4"/><path d="M13 6l5 5"/></svg>
+{% elif name == 'clock' %}
+<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M3.6 9h2.2"/><path d="M18.2 9h2.2"/></svg>
+{% elif name == 'wrench' %}
+<svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18v3h3l6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2.8-2.8z"/><path d="M18 2l4 4"/><path d="M20 4l-3 3"/></svg>
+{% elif name == 'flask-conical' %}
+<svg viewBox="0 0 24 24"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/><path d="M8.5 2h7"/></svg>
+{% else %}
+<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+{% endif %}
+{% endmacro %}

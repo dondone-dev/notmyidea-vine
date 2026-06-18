@@ -1,0 +1,60 @@
+# Japanese translations for notmyidea-vine.
+# Copyright (C) 2025 notmyidea-vine contributors
+# This file is distributed under the same license as the notmyidea-vine project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: notmyidea-vine\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-16 12:15+0800\n"
+"PO-Revision-Date: 2025-04-16 12:16+0800\n"
+"Last-Translator: \n"
+"Language: ja\n"
+"Language-Team: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+msgid "Archives"
+msgstr "アーカイブ"
+
+msgid "Avatar"
+msgstr "アバター"
+
+msgid "More"
+msgstr "もっと見る"
+
+msgid "No articles in this language"
+msgstr "この言語の記事はありません"
+
+msgid "Publication Year"
+msgstr "出版年"
+
+msgid "Publisher"
+msgstr "出版社"
+
+msgid "RSS Feed"
+msgstr "RSSフィード"
+
+msgid "Reading End"
+msgstr "読み終わり"
+
+msgid "Reading Start"
+msgstr "読み始め"
+
+msgid "Site Status"
+msgstr "サイト状態"
+
+msgid "articles"
+msgstr "記事"
+
+msgid "memos"
+msgstr "メモ"
+
+msgid "点击加载评论"
+msgstr "コメントを読み込む"
+
+msgid "欢迎来到我的博客"
+msgstr "ブログへようこそ"

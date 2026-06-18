@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}{{ SITENAME }} - Tags{% endblock %}
+{% set enable_tag_cloud = THEME_ENABLE_TAG_CLOUD|default(true) %}
+
+{% block extra_head %}
+{% if enable_tag_cloud %}
+<!-- amCharts 5 WordCloud -->
+<script defer src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script defer src="https://cdn.amcharts.com/lib/5/wc.js"></script>
+<script defer src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+<style>
+#tag-cloud-container {
+  width: 100%;
+  height: 600px;
+  margin: 20px -20px;
+  padding: 0 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tag-cloud-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tag-cloud-header h1 {
+  color: var(--color-text);
+  margin-bottom: 10px;
+}
+
+.tag-cloud-stats {
+  color: var(--color-text-secondary);
+  font-size: 1.1rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  #tag-cloud-container {
+    height: 400px;
+    margin: 20px -15px;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  #tag-cloud-container {
+    height: 300px;
+    margin: 20px -10px;
+    padding: 0 10px;
+  }
+}
+</style>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<section id="content" class="body">
+    {% import 'macros/lang_filters.html' as lang_filters %}
+    {% set current_lang = DEFAULT_LANG %}
+    {% if output_file.startswith('ja/') %}
+        {% set current_lang = 'ja' %}
+    {% elif output_file.startswith('en/') %}
+        {% set current_lang = 'en' %}
+    {% elif output_file.startswith('fr/') %}
+        {% set current_lang = 'fr' %}
+    {% endif %}
+
+    {% set lang_tags = {} %}
+    {% for tag, articles in tags|sort %}
+        {% set lang_articles = [] %}
+        {% for article in articles %}
+            {% if lang_filters.article_lang_match(article, current_lang, DEFAULT_LANG) == '1' %}
+                {% set _ = lang_articles.append(article) %}
+            {% endif %}
+        {% endfor %}
+        {% if lang_articles|length > 0 %}
+            {% set _ = lang_tags.update({tag: lang_articles}) %}
+        {% endif %}
+    {% endfor %}
+
+    {% if enable_tag_cloud %}
+    <div id="tag-cloud-container"></div>
+    {% else %}
+    <ul class="column-4">
+        {% for tag in lang_tags|sort %}
+        <li><a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a> ({{ lang_tags[tag]|length }})</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+
+{% if enable_tag_cloud %}
+<script>
+// 准备标签数据
+var tagData = [
+{% for tag in lang_tags|sort %}
+    {
+        "tag": "{{ tag.name }}",
+        "count": {{ lang_tags[tag]|length }},
+        "url": "{{ SITEURL }}/{{ tag.url }}"
+    }{% if not loop.last %},{% endif %}
+{% endfor %}
+];
+
+window.addEventListener("DOMContentLoaded", function () {
+    function initTagCloud() {
+        if (!window.am5 || !window.am5wc || !window.am5themes_Animated) {
+            return;
+        }
+
+        var rootStyle = getComputedStyle(document.documentElement);
+        var colorAccent = rootStyle.getPropertyValue('--color-accent').trim();
+        var colorText = rootStyle.getPropertyValue('--color-text').trim();
+        var colorAccentSoft = rootStyle.getPropertyValue('--color-accent-soft').trim();
+        var colorTextSecondary = rootStyle.getPropertyValue('--color-text-secondary').trim();
+
+        var root = am5.Root.new("tag-cloud-container");
+        root.setThemes([am5themes_Animated.new(root)]);
+
+        // v5 中 WordCloud 本身即 series，直接推入 root.container
+        var series = root.container.children.push(
+            am5wc.WordCloud.new(root, {
+                categoryField: "tag",
+                valueField: "count",
+                calculateAggregates: true,
+                randomness: 0.1,
+                minFontSize: window.innerWidth < 768 ? 10 : 12,
+                maxFontSize: window.innerWidth < 768 ? 28 : 42
+            })
+        );
+
+        series.labels.template.setAll({
+            fontFamily: "Source Sans Pro, Helvetica Neue, Arial, sans-serif",
+            interactive: true,
+            cursorOverStyle: "pointer",
+            tooltipText: "{tag}: {count} 篇文章"
+        });
+
+        series.labels.template.events.on("click", function(ev) {
+            var url = ev.target.dataItem.dataContext.url;
+            if (url) { window.location.href = url; }
+        });
+
+        series.set("heatRules", [{
+            target: series.labels.template,
+            key: "fill",
+            min: am5.color(colorAccent),
+            max: am5.color(colorText),
+            dataField: "value"
+        }]);
+
+        series.labels.template.states.create("hover", {
+            fill: am5.color(colorAccentSoft),
+            scale: 1.1
+        });
+
+        series.data.setAll(tagData);
+    }
+
+    var container = document.getElementById("tag-cloud-container");
+    if (!container) {
+        return;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+        initTagCloud();
+        return;
+    }
+
+    var initialized = false;
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (!initialized && entry.isIntersecting) {
+                initialized = true;
+                observer.disconnect();
+                initTagCloud();
+            }
+        });
+    }, { rootMargin: "200px 0px" });
+
+    observer.observe(container);
+});
+</script>
+{% endif %}
+
+{% endblock %}

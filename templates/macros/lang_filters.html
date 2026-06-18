@@ -1,0 +1,13 @@
+{% macro article_lang_match(article, current_lang, default_lang='zh') -%}
+{%- if article.source_path.endswith('.en.md') -%}
+  {%- if current_lang == 'en' %}1{%- else %}0{%- endif -%}
+{%- elif article.source_path.endswith('.fr.md') -%}
+  {%- if current_lang == 'fr' %}1{%- else %}0{%- endif -%}
+{%- elif article.source_path.endswith('.ja.md') -%}
+  {%- if current_lang == 'ja' %}1{%- else %}0{%- endif -%}
+{%- elif article.source_path.endswith('.zh.md') -%}
+  {%- if current_lang == 'zh' %}1{%- else %}0{%- endif -%}
+{%- else -%}
+  {%- if current_lang == default_lang %}1{%- else %}0{%- endif -%}
+{%- endif -%}
+{%- endmacro %}

@@ -1,0 +1,17 @@
+{#- Year-grouped article list partial.
+    Expects `article_list` variable to be set via {% with %} before including.
+    Optionally accepts `article_count` for the header count display.
+-#}
+{% for year, year_articles in article_list|groupby('date.year')|reverse %}
+<div class="year-section">
+  <h2 class="year-header">{{ year }}</h2>
+  <dl class="archives">
+  {% for article in year_articles %}
+    <li>
+      <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+      <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+    </li>
+  {% endfor %}
+  </dl>
+</div>
+{% endfor %}

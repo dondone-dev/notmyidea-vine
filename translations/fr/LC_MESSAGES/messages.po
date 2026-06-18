@@ -1,0 +1,60 @@
+# French translations for notmyidea-vine.
+# Copyright (C) 2025 notmyidea-vine contributors
+# This file is distributed under the same license as the notmyidea-vine project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: notmyidea-vine\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-16 10:26+0800\n"
+"PO-Revision-Date: 2025-04-16 10:27+0800\n"
+"Last-Translator: \n"
+"Language: fr\n"
+"Language-Team: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+msgid "Archives"
+msgstr "Archives"
+
+msgid "Avatar"
+msgstr "Avatar"
+
+msgid "More"
+msgstr "Plus"
+
+msgid "No articles in this language"
+msgstr "Aucun article dans cette langue"
+
+msgid "Publication Year"
+msgstr "Année de parution"
+
+msgid "Publisher"
+msgstr "Éditeur"
+
+msgid "RSS Feed"
+msgstr "Flux RSS"
+
+msgid "Reading End"
+msgstr "Fin de lecture"
+
+msgid "Reading Start"
+msgstr "Début de lecture"
+
+msgid "Site Status"
+msgstr "État du site"
+
+msgid "articles"
+msgstr "articles"
+
+msgid "memos"
+msgstr "notes"
+
+msgid "点击加载评论"
+msgstr "Charger les commentaires"
+
+msgid "欢迎来到我的博客"
+msgstr "Bienvenue sur mon blog"

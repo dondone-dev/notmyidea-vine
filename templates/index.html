@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section id="content" class="body">
+  <h1>{{ INDEX_TITLE|default(_('欢迎来到我的博客')) }}</h1>
+  {% if INDEX_IMAGE_BY_DATE %}
+  <img
+    id="idx-img"
+    class="idximg{% if THEME_ENABLE_IMAGE_SKELETON|default(true) %} idximg-skeleton js-image-skeleton{% endif %}"
+    src="{{ INDEX_IMAGE_BY_DATE }}"
+    {% if THEME_ENABLE_IMAGE_HINTS|default(true) %}
+    width="{{ homepage_image_width }}"
+    height="{{ homepage_image_height }}"
+    fetchpriority="high"
+    loading="eager"
+    decoding="async"
+    {% endif %}
+    alt="{{ INDEX_TITLE|default(_('欢迎来到我的博客')) }}">
+  {% endif %}
+  <div class="index-message-container">
+    {% if INDEX_MESSAGE %}
+    <div id="idx-msg" class="index-message">{{ INDEX_MESSAGE|safe }}</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

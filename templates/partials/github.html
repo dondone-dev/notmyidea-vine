@@ -1,0 +1,14 @@
+{% if GITHUB_URL %}
+<a
+  href="{{ GITHUB_URL }}"
+  class="github-corner{% if GITHUB_POSITION == 'left' %} github-corner-left{% endif %}"
+  aria-label="View source on GitHub">
+  <span class="github-corner-label">GitHub</span>
+  <span class="github-corner-icon" aria-hidden="true">
+    <svg class="lucide-icon icon-github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3.3-.4 6.8-1.6 6.8-7.3A5.7 5.7 0 0 0 19.2 3 5.3 5.3 0 0 0 19.1 1S17.8.6 15 2.5a13.4 13.4 0 0 0-6 0C6.2.6 4.9 1 4.9 1A5.3 5.3 0 0 0 4.8 3a5.7 5.7 0 0 0-1.6 4.5c0 5.7 3.5 6.9 6.8 7.3a4.8 4.8 0 0 0-1 3.2v4" />
+      <path d="M9 18c-4.5 2-5-2-7-2" />
+    </svg>
+  </span>
+</a>
+{% endif %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}{{ SITENAME }} - {{ tag }}{% endblock %}
+{% block content %}
+{% import 'macros/lang_filters.html' as lang_filters %}
+<section id="content" class="body">
+  {% set current_lang = DEFAULT_LANG %}
+  {% if output_file.startswith('ja/') %}
+    {% set current_lang = 'ja' %}
+  {% elif output_file.startswith('en/') %}
+    {% set current_lang = 'en' %}
+  {% elif output_file.startswith('fr/') %}
+    {% set current_lang = 'fr' %}
+  {% endif %}
+
+  {% set total_articles_in_current_lang = [] %}
+  {% for article in articles %}
+    {% if lang_filters.article_lang_match(article, current_lang, DEFAULT_LANG) == '1' %}
+      {% set _ = total_articles_in_current_lang.append(article) %}
+    {% endif %}
+  {% endfor %}
+
+  {% if articles_page %}
+    {% set articles_in_current_lang = [] %}
+    {% for article in articles_page.object_list %}
+      {% if lang_filters.article_lang_match(article, current_lang, DEFAULT_LANG) == '1' %}
+        {% set _ = articles_in_current_lang.append(article) %}
+      {% endif %}
+    {% endfor %}
+
+    {% if articles_in_current_lang|length > 0 or not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+      {% if articles_in_current_lang|length > 0 %}
+        <div class="category-info">{{ tag }} - {{ total_articles_in_current_lang|length }} {{ _('articles') }}</div>
+        {% for year, year_articles in articles_in_current_lang|groupby('date.year')|reverse %}
+          <div class="year-section">
+            <h2 class="year-header">{{ year }}</h2>
+            <ul class="archives">
+            {% for article in year_articles %}
+              <li>
+                <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+                <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% elif not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+        <div class="category-info">{{ tag }} - {{ articles|length }} {{ _('articles') }}</div>
+        {% for year, year_articles in articles_page.object_list|groupby('date.year')|reverse %}
+          <div class="year-section">
+            <h2 class="year-header">{{ year }}</h2>
+            <ul class="archives">
+            {% for article in year_articles %}
+              <li>
+                <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+                <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% if articles_page.has_other_pages() %}
+        {% include 'partials/pagination.html' %}
+      {% endif %}
+    {% else %}
+      <div class="category-info">{{ tag }} - {{ _('No articles in this language') }}</div>
+    {% endif %}
+
+  {% else %}
+    {% set articles_in_current_lang = [] %}
+    {% for article in articles %}
+      {% if lang_filters.article_lang_match(article, current_lang, DEFAULT_LANG) == '1' %}
+        {% set _ = articles_in_current_lang.append(article) %}
+      {% endif %}
+    {% endfor %}
+
+    {% if articles_in_current_lang|length > 0 or not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+      {% if articles_in_current_lang|length > 0 %}
+        <div class="category-info">{{ tag }} - {{ total_articles_in_current_lang|length }} {{ _('articles') }}</div>
+        {% for year, year_articles in articles_in_current_lang|groupby('date.year')|reverse %}
+          <div class="year-section">
+            <h2 class="year-header">{{ year }}</h2>
+            <ul class="archives">
+            {% for article in year_articles %}
+              <li>
+                <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+                <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% elif not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+        <div class="category-info">{{ tag }} - {{ articles|length }} {{ _('articles') }}</div>
+        {% for year, year_articles in articles|groupby('date.year')|reverse %}
+          <div class="year-section">
+            <h2 class="year-header">{{ year }}</h2>
+            <ul class="archives">
+            {% for article in year_articles %}
+              <li>
+                <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+                <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% else %}
+      <div class="category-info">{{ tag }} - {{ _('No articles in this language') }}</div>
+    {% endif %}
+  {% endif %}
+</section>
+{% endblock %}

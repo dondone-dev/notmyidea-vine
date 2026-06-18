@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block content %}
+{% import 'macros/lang_filters.html' as lang_filters %}
+<section id="content" class="body{% if category.slug == 'memos' %} memos-section{% endif %}">
+  {% set current_lang = DEFAULT_LANG %}
+  {% if output_file.startswith('ja/') %}
+    {% set current_lang = 'ja' %}
+  {% elif output_file.startswith('en/') %}
+    {% set current_lang = 'en' %}
+  {% elif output_file.startswith('fr/') %}
+    {% set current_lang = 'fr' %}
+  {% endif %}
+  
+  {# 计算当前分类下所有语言匹配的文章总数 #}
+  {% set total_articles_in_current_lang = [] %}
+  {% for article in articles %}
+    {% if lang_filters.article_lang_match(article, current_lang, DEFAULT_LANG) == '1' %}
+      {% set _ = total_articles_in_current_lang.append(article) %}
+    {% endif %}
+  {% endfor %}
+
+  {% if articles_page %}
+    {# 分页对象下，当前页文章列表 #}
+    {% set articles_in_current_lang = [] %}
+    {% for article in articles_page.object_list %}
+      {% if lang_filters.article_lang_match(article, current_lang, DEFAULT_LANG) == '1' %}
+        {% set _ = articles_in_current_lang.append(article) %}
+      {% endif %}
+    {% endfor %}
+
+    {% if articles_in_current_lang|length > 0 or not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+      {% if articles_in_current_lang|length > 0 %}
+        {% if category.slug == 'memos' %}
+          {# 引入 Memos 专用模板 #}
+          {% include 'category_memos.html' %}
+        {% elif category.slug == 'reading' %}
+          {# 引入 Reading 专用模板 #}
+          {% include 'category_reading.html' %}
+        {% else %}
+          {# 其他分类使用原有布局 #}
+          <div class="category-info">{{ category }} - {{ total_articles_in_current_lang|length }} {{ _('articles') }}</div>
+          
+          {# 按年份分组显示文章 #}
+          {% for year, year_articles in articles_in_current_lang|groupby('date.year')|reverse %}
+            <div class="year-section">
+              <h2 class="year-header">{{ year }}</h2>
+              <ul class="archives">
+              {% for article in year_articles %}
+                <li>
+                  <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+                  <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        {% endif %}
+        
+      {% elif not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+        {% if category.slug == 'memos' %}
+          {# Memos 专用布局 - 无当前语言文章时，显示所有文章 #}
+          {% set articles_in_current_lang = articles_page.object_list %}
+          {% include 'category_memos.html' %}
+        {% elif category.slug == 'reading' %}
+          {# Reading 专用布局 - 无当前语言文章时，显示所有文章 #}
+          {% set articles_in_current_lang = articles_page.object_list %}
+          {% include 'category_reading.html' %}
+        {% else %}
+          {# 其他分类使用原有布局 #}
+          <div class="category-info">{{ category }} - {{ articles|length }} {{ _('articles') }}</div>
+          
+          {# 按年份分组显示文章 #}
+          {% for year, year_articles in articles_page.object_list|groupby('date.year')|reverse %}
+            <div class="year-section">
+              <h2 class="year-header">{{ year }}</h2>
+              <ul class="archives">
+              {% for article in year_articles %}
+                <li>
+                  <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+                  <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+      
+      <!-- 添加翻页功能 -->
+      {% if articles_page.has_other_pages() %}
+        {% include 'partials/pagination.html' %}
+      {% endif %}
+    {% else %}
+      {% if category.slug == 'memos' %}
+        <div class="memos-header">
+          <h1 class="memos-title">{{ category }} - 说说</h1>
+          <p class="memos-subtitle">{{ _('No articles in this language') }}</p>
+        </div>
+      {% elif category.slug == 'reading' %}
+        <div class="reading-header">
+          <h1 class="reading-title">{{ category }} - 读书笔记</h1>
+          <p class="reading-subtitle">{{ _('No articles in this language') }}</p>
+        </div>
+      {% else %}
+        <div class="category-info">{{ category }} - {{ _('No articles in this language') }}</div>
+      {% endif %}
+    {% endif %}
+  {% else %}
+    <!-- 兼容旧版本，直接使用 articles 对象 -->
+    {% set articles_in_current_lang = [] %}
+    {% for article in articles %}
+      {% if lang_filters.article_lang_match(article, current_lang, DEFAULT_LANG) == '1' %}
+        {% set _ = articles_in_current_lang.append(article) %}
+      {% endif %}
+    {% endfor %}
+
+    {% if articles_in_current_lang|length > 0 or not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+      {% if articles_in_current_lang|length > 0 %}
+        {% if category.slug == 'memos' %}
+          {# 引入 Memos 专用模板 #}
+          {% include 'category_memos.html' %}
+        {% elif category.slug == 'reading' %}
+          {# 引入 Reading 专用模板 #}
+          {% include 'category_reading.html' %}
+        {% else %}
+          {# 其他分类使用原有布局 #}
+          <div class="category-info">{{ category }} - {{ total_articles_in_current_lang|length }} {{ _('articles') }}</div>
+          
+          {# 按年份分组显示文章 #}
+          {% for year, year_articles in articles_in_current_lang|groupby('date.year')|reverse %}
+            <div class="year-section">
+              <h2 class="year-header">{{ year }}</h2>
+              <ul class="archives">
+              {% for article in year_articles %}
+                <li>
+                  <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+                  <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        {% endif %}
+        
+      {% elif not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+        {% if category.slug == 'memos' %}
+          {# Memos 专用布局 - 无当前语言文章时，显示所有文章 #}
+          {% set articles_in_current_lang = articles %}
+          {% include 'category_memos.html' %}
+        {% elif category.slug == 'reading' %}
+          {# Reading 专用布局 - 无当前语言文章时，显示所有文章 #}
+          {% set articles_in_current_lang = articles %}
+          {% include 'category_reading.html' %}
+        {% else %}
+          {# 其他分类使用原有布局 #}
+          <div class="category-info">{{ category }} - {{ articles|length }} {{ _('articles') }}</div>
+          
+          {# 按年份分组显示文章 #}
+          {% for year, year_articles in articles|groupby('date.year')|reverse %}
+            <div class="year-section">
+              <h2 class="year-header">{{ year }}</h2>
+              <ul class="archives">
+              {% for article in year_articles %}
+                <li>
+                  <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+                  <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    {% else %}
+      {% if category.slug == 'memos' %}
+        <div class="memos-header">
+          <h1 class="memos-title">{{ category }} - 备忘录</h1>
+          <p class="memos-subtitle">{{ _('No articles in this language') }}</p>
+        </div>
+      {% elif category.slug == 'reading' %}
+        <div class="reading-header">
+          <h1 class="reading-title">{{ category }} - 读书笔记</h1>
+          <p class="reading-subtitle">{{ _('No articles in this language') }}</p>
+        </div>
+      {% else %}
+        <div class="category-info">{{ category }} - {{ _('No articles in this language') }}</div>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+</section>
+{% endblock %}
+{% block title %}{{ SITENAME }} - {{ category }}{% endblock %}

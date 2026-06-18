@@ -1,0 +1,30 @@
+{# Memos 分类专用模板片段 #}
+<header class="memos-feed-header">
+  <h1 class="memos-feed-title">{{ category }}</h1>
+  <p class="memos-feed-meta">{{ total_articles_in_current_lang|length }} {{ _('memos') }}</p>
+</header>
+
+<div class="memos-container">
+  {% for article in articles_in_current_lang %}
+    <div class="memo-card">
+      <div class="memo-header">
+        <time class="memo-date" datetime="{{ article.date.isoformat() }}">{{ article.date.strftime('%Y-%m-%d %H:%M') }}</time>
+        {% if article.tags %}
+          <div class="memo-tags">
+            {% for tag in article.tags %}
+              <a href="{{ SITEURL }}/tag/{{ tag.slug }}.html" class="memo-tag">#{{ tag }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      
+      <div class="memo-content">
+        <div class="memo-content-text" data-media-layouts="true">{{ article.content|read_more_content }}</div>
+        
+        <div class="memo-footer">
+          <a href="{{ SITEURL }}/{{ article.url }}" class="memo-read-more">阅读原文</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

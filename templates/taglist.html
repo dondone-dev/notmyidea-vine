@@ -1,0 +1,8 @@
+{% if article.tags %}
+<span class="info-label">Tags:</span>
+<span class="info-value tag-list-value">
+  {% for tag in article.tags %}
+    <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag | escape }}</a>{% if not loop.last %}<span class="tag-sep">, </span>{% endif %}
+  {% endfor %}
+</span>
+{% endif %}

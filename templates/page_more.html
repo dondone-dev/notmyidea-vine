@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% import 'macros/more_icons.html' as more_icons %}
+
+{% block title %}{{ SITENAME }} - {{ page.title }}{% endblock %}
+
+{% block extra_head %}
+<style>
+@font-face {
+  font-family: 'Righteous';
+  src: url('{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/fonts/Righteous-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.entry-title { display: none !important; }
+.more-container {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 2rem 0 2.4rem;
+}
+.more-section-title {
+  margin: 0 0 1.7rem 0;
+  color: #333;
+  font-size: 1.14rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.more-apps-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem 1.55rem;
+  padding: 0;
+  margin: 0;
+}
+.more-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  background-image: none;
+  transition: none;
+}
+.more-app:hover { transform: none; }
+.more-app:hover,
+.more-app:active {
+  background-color: transparent !important;
+  color: inherit !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+}
+.more-app-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(248,249,250,0.88));
+  border: 1px solid #e8e1d5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.more-app:hover .more-app-icon {
+  background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(248,249,250,0.94));
+  border-color: #d8cab8;
+}
+.more-app-icon svg {
+  width: 30px;
+  height: 30px;
+  transition: stroke 0.2s ease;
+}
+.more-app-icon svg,
+.more-app-icon svg * {
+  fill: none;
+  stroke: var(--color-text-secondary);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.more-app:hover .more-app-icon svg,
+.more-app:hover .more-app-icon svg * {
+  stroke: var(--color-accent);
+}
+.more-app-icon .brand-icon,
+.more-app-icon .brand-icon * {
+  fill: var(--color-text-secondary);
+  stroke: none;
+}
+.more-app:hover .more-app-icon .brand-icon,
+.more-app:hover .more-app-icon .brand-icon * {
+  fill: var(--color-accent);
+}
+.more-app-icon .beszel-text {
+  font-family: 'Righteous', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+.more-app-icon--text {
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease;
+}
+.more-app:hover .more-app-icon .beszel-text,
+.more-app:hover .more-app-icon--text {
+  color: var(--color-accent);
+}
+.more-app-title {
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: #3f3931;
+  text-align: center;
+  margin: 0;
+  line-height: 1.3;
+  transition: color 0.2s ease;
+}
+.more-app:hover .more-app-title { color: #333; }
+@media screen and (max-width: 768px) {
+  .more-apps-grid { gap: 1.2rem 1.25rem; padding: 0; }
+  .more-app-icon { width: 64px; height: 64px; border-radius: 13px; }
+  .more-app-icon svg { width: 29px; height: 29px; }
+  .more-app-icon .beszel-text { font-size: 13px; }
+  .more-app-title { font-size: 0.95rem; }
+}
+@media screen and (max-width: 480px) {
+  .more-apps-grid { gap: 1rem 1.05rem; padding: 0; }
+  .more-app-icon { width: 58px; height: 58px; border-radius: 12px; }
+  .more-app-icon svg { width: 26px; height: 26px; }
+  .more-app-icon .beszel-text { font-size: 11px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="content" class="body">
+<div class="more-container">
+{% if categories %}
+  <h3 class="more-section-title">Categories</h3>
+  <div class="more-apps-grid">
+  {% for cat, articles in categories %}
+    <a href="{{ SITEURL }}/{{ cat.url }}" class="more-app">
+      <div class="more-app-icon">
+        {{ more_icons.render('layout-columns') }}
+      </div>
+      <div class="more-app-title">{{ cat.name }}</div>
+    </a>
+  {% endfor %}
+  </div>
+{% endif %}
+{% for section in MORE_PAGE_SECTIONS|default([]) %}
+  <h3 class="more-section-title"{% if not loop.first or categories %} style="margin-top: 3rem;"{% endif %}>{{ section.title }}</h3>
+  <div class="more-apps-grid">
+  {% for item in section['items'] %}
+    <a href="{{ item.url }}"{% if item.target is defined %} target="{{ item.target }}"{% endif %}{% if item.title is defined %} title="{{ item.title }}"{% endif %} class="more-app">
+      <div class="more-app-icon{% if item.icon_class is defined %} {{ item.icon_class }}{% endif %}">
+        {% if 'icon_html' in item %}
+          {{ item.icon_html | safe }}
+        {% else %}
+          {{ more_icons.render(item.icon) }}
+        {% endif %}
+      </div>
+      <div class="more-app-title">{{ item.name }}</div>
+    </a>
+  {% endfor %}
+  </div>
+{% endfor %}
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<section id="content" class="body">
+  {% set current_lang = DEFAULT_LANG %}
+  {% if output_file.startswith('ja/') %}
+    {% set current_lang = 'ja' %}
+  {% elif output_file.startswith('en/') %}
+    {% set current_lang = 'en' %}
+  {% elif output_file.startswith('fr/') %}
+    {% set current_lang = 'fr' %}
+  {% endif %}
+
+  {% set articles_in_current_lang = [] %}
+  {% for article in dates %}
+    {% if current_lang == 'zh' and article.source_path.endswith('.md') and not article.source_path.endswith('.en.md') and not article.source_path.endswith('.fr.md') and not article.source_path.endswith('.ja.md') %}
+      {% set _ = articles_in_current_lang.append(article) %}
+    {% elif current_lang == 'en' and article.source_path.endswith('.en.md') %}
+      {% set _ = articles_in_current_lang.append(article) %}
+    {% elif current_lang == 'fr' and article.source_path.endswith('.fr.md') %}
+      {% set _ = articles_in_current_lang.append(article) %}
+    {% elif current_lang == 'ja' and article.source_path.endswith('.ja.md') %}
+      {% set _ = articles_in_current_lang.append(article) %}
+    {% endif %}
+  {% endfor %}
+
+  {% if articles_in_current_lang|length > 0 or not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+    {% if articles_in_current_lang|length > 0 %}
+      {# 显示文章数量和标题，与 category.html 保持统一风格 #}
+      <div class="category-info">{{ _('Archives') }} - {{ articles_in_current_lang|length }} {{ _('articles') }}</div>
+      
+      {# 按年份分组显示文章 #}
+      {% with article_list=articles_in_current_lang %}{% include 'partials/year_article_list.html' %}{% endwith %}
+    {% elif not I18N_SHOW_ONLY_CURRENT_LANG_CONTENT|default(true) %}
+      {# 无当前语言文章时，显示所有文章 #}
+      <div class="category-info">{{ _('Archives') }} - {{ dates|length }} {{ _('articles') }}</div>
+
+      {# 按年份分组显示所有文章 #}
+      {% with article_list=dates %}{% include 'partials/year_article_list.html' %}{% endwith %}
+    {% endif %}
+  {% else %}
+    <div class="category-info">{{ _('Archives') }} - {{ _('No articles in this language') }}</div>
+  {% endif %}
+</section>
+{% endblock %}

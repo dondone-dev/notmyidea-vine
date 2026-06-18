@@ -1,0 +1,36 @@
+{# Reading 分类专用模板片段 #}
+<div class="category-info">{{ category }} - {{ total_articles_in_current_lang|length }} {{ _('articles') }}</div>
+
+{% if READING_NOTICE_HTML|default('') %}
+<div class="reading-notice">
+  {{ READING_NOTICE_HTML }}
+</div>
+{% endif %}
+
+<div class="reading-container">
+  {# 按年份分组显示文章 #}
+  {% for year, year_articles in articles_in_current_lang|groupby('date.year')|reverse %}
+    <div class="year-section">
+      <h2 class="year-header">{{ year }}</h2>
+      <div class="reading-articles-grid">
+      {% for article in year_articles %}
+        <div class="reading-article-item">
+          {% if article.cover_url %}
+          <div class="reading-article-cover">
+            <img src="{{ article.cover_url }}" alt="{{ article.title }}" class="reading-cover-thumbnail"{% if THEME_ENABLE_IMAGE_HINTS|default(true) %} width="60" height="80" loading="lazy" decoding="async"{% endif %}>
+          </div>
+          {% endif %}
+          <div class="reading-article-content">
+            <div class="reading-article-meta">
+              <time datetime="{{ article.locale_date }}">{{ article.locale_date }}</time>
+            </div>
+            <div class="reading-article-title">
+              <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,465 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block extra_head %}
+<style>
+.about-page {
+    display: grid;
+    gap: 1.4rem;
+    color: #222;
+}
+
+.about-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 170px;
+    align-items: start;
+    gap: 1.4rem;
+}
+
+.about-side {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1.1rem;
+  min-height: 104px;
+}
+
+.about-avatar {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e6e1d8;
+}
+
+.about-copy {
+    max-width: 38rem;
+}
+
+.about-copy p {
+    margin: 0.5rem 0 !important;
+    color: #4d4d4d;
+    line-height: 1.75;
+}
+
+.about-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.about-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 0.68rem;
+    border: 1px solid #ddd5c8;
+    border-radius: 999px;
+    background: transparent;
+    color: #49433b;
+    font: inherit;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.about-action:hover {
+    border-color: #b8ab9a;
+    color: #c74350;
+}
+
+.about-action:focus-visible {
+    outline: 2px solid rgba(199, 67, 80, 0.28);
+    outline-offset: 3px;
+}
+
+.about-more-titleline {
+    margin: 0.45rem 0 0;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #4f473c;
+}
+
+.about-more-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+    margin: 0.6rem 0 0;
+}
+
+.about-more-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #ede8de;
+    border-radius: 8px;
+    min-height: 5.8rem;
+    padding: 0.95rem 0.92rem;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.48));
+    transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+.about-more-card::before,
+.about-more-card::after {
+    content: "";
+    position: absolute;
+    inset: auto;
+    pointer-events: none;
+}
+
+.about-more-card:hover {
+    border-color: #c9beb0;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.56));
+    transform: translateY(-1px);
+}
+
+.about-more-card--friends::before {
+    width: 6.6rem;
+    height: 6.6rem;
+    right: -1.55rem;
+    bottom: -2.05rem;
+    border-radius: 50%;
+    border: 1px solid rgba(196, 182, 164, 0.34);
+    background:
+        radial-gradient(circle at 35% 35%, rgba(230, 222, 209, 0.3), rgba(230, 222, 209, 0));
+}
+
+.about-more-card--friends::after {
+    width: 3.2rem;
+    height: 3.2rem;
+    right: 1rem;
+    top: 0.95rem;
+    border-radius: 50%;
+    border: 1px solid rgba(205, 191, 174, 0.26);
+}
+
+.about-more-card--history::before {
+    left: 0.95rem;
+    right: 0.95rem;
+    top: 1.1rem;
+    height: 2.4rem;
+    border-radius: 999px;
+    background:
+        repeating-linear-gradient(
+            180deg,
+            rgba(220, 212, 201, 0.15) 0,
+            rgba(220, 212, 201, 0.15) 1px,
+            transparent 1px,
+            transparent 0.62rem
+        );
+}
+
+.about-more-card--history::after {
+    width: 4.4rem;
+    height: 4.4rem;
+    right: -0.95rem;
+    bottom: -1.7rem;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(202, 191, 176, 0.24);
+}
+
+.about-more-card--copyright::before {
+    width: 5.1rem;
+    height: 5.1rem;
+    right: -0.9rem;
+    top: -1.15rem;
+    border-radius: 1.1rem;
+    border: 1px solid rgba(204, 190, 179, 0.24);
+    transform: rotate(12deg);
+}
+
+.about-more-card--copyright::after {
+    width: 3.7rem;
+    height: 3.7rem;
+    right: 1.2rem;
+    bottom: -1.15rem;
+    border-radius: 50%;
+    box-shadow:
+        inset 0 0 0 1px rgba(208, 192, 181, 0.24),
+        0 0 0 0.55rem rgba(245, 241, 236, 0.35);
+}
+
+.about-more-title {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.36rem;
+    margin-top: 0.7rem;
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: #595346;
+}
+
+.about-more-title::after {
+    content: "↗";
+    font-size: 0.8rem;
+    color: #aaa091;
+}
+
+.about-dialog {
+    width: min(39rem, calc(100vw - 2rem));
+    border: 1px solid #e7e0d6;
+    border-radius: 14px;
+    padding: 0;
+    background: #fffdfa;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.14);
+}
+
+.about-dialog > br,
+.about-dialog > p:empty {
+    display: none;
+}
+
+.about-dialog::backdrop {
+    background: rgba(28, 28, 28, 0.32);
+}
+
+.about-dialog-inner {
+    display: grid;
+    gap: 1rem;
+    margin: 1rem;
+    padding: 1rem 1rem 1.05rem;
+}
+
+.about-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.about-dialog-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.about-dialog-close {
+    border: 0;
+    background: transparent;
+    color: #666;
+    font: inherit;
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.1rem 0.2rem;
+}
+
+.about-dialog-close:hover {
+    color: #c74350;
+}
+
+.about-dialog-copy {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.about-copy-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.about-copy-value {
+    flex: 1 1 auto;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: #333;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid #e5ddd2;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.about-copy-button {
+    border: 1px solid #d9d2c6;
+    border-radius: 999px;
+    background: transparent;
+    color: #444;
+    font: inherit;
+    font-size: 0.8rem;
+    padding: 0.36rem 0.72rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.about-copy-button:hover {
+    border-color: #b8ab9a;
+    color: #c74350;
+}
+
+.about-copy-note {
+    color: #6b6b6b;
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .about-side {
+        justify-items: center;
+        order: 2;
+    }
+
+    .about-more-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-copy {
+        text-align: left;
+    }
+
+    .about-copy-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .about-copy-button {
+        width: fit-content;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="content" class="body">
+<div class="about-page">
+  <section class="about-hero">
+    <div class="about-copy">
+      {{ page.content }}
+    </div>
+    <div class="about-side">
+      {% if AUTHOR_AVATAR %}
+      <img class="about-avatar" src="{{ AUTHOR_AVATAR }}" alt="{{ _('Avatar') }}" width="104" height="104" decoding="async">
+      {% endif %}
+      <div class="about-actions">
+        {% if THEME_CONTACT_EMAIL %}
+        <button type="button" class="about-action" data-dialog-open="contactDialog">Contact</button>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {% if THEME_ABOUT_MORE_LINKS %}
+  <section>
+    <div class="about-more-titleline">{{ _('More') }}</div>
+    <div class="about-more-grid">
+      {% for link in THEME_ABOUT_MORE_LINKS %}
+      <a class="about-more-card {{ link.css_class | default('') }}" href="{{ link.url }}">
+        <div class="about-more-title">{{ link.title }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+
+{% if THEME_CONTACT_EMAIL %}
+<dialog id="contactDialog" class="about-dialog">
+  <div class="about-dialog-inner">
+    <div class="about-dialog-header">
+      <h2 class="about-dialog-title">Contact</h2>
+      <button type="button" class="about-dialog-close" data-dialog-close="contactDialog" aria-label="Close">×</button>
+    </div>
+    <div class="about-dialog-copy">
+      <div class="about-copy-row">
+        <span class="about-copy-value" id="contactEmail">{{ THEME_CONTACT_EMAIL }}</span>
+        <button type="button" class="about-copy-button" data-copy-target="contactEmail">Copy</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+{% endif %}
+
+</section>
+
+<script>
+(function () {
+  function openDialog(id) {
+    const dialog = document.getElementById(id);
+    if (dialog && typeof dialog.showModal === "function") {
+      dialog.showModal();
+    }
+  }
+
+  function closeDialog(id) {
+    const dialog = document.getElementById(id);
+    if (dialog && dialog.open) {
+      dialog.close();
+    }
+  }
+
+  document.querySelectorAll("[data-dialog-open]").forEach((button) => {
+    button.addEventListener("click", () => openDialog(button.dataset.dialogOpen));
+  });
+
+  document.querySelectorAll("[data-dialog-close]").forEach((button) => {
+    button.addEventListener("click", () => closeDialog(button.dataset.dialogClose));
+  });
+
+  document.querySelectorAll("dialog.about-dialog").forEach((dialog) => {
+    dialog.addEventListener("click", (event) => {
+      const rect = dialog.getBoundingClientRect();
+      const isInside =
+        rect.top <= event.clientY &&
+        event.clientY <= rect.top + rect.height &&
+        rect.left <= event.clientX &&
+        event.clientX <= rect.left + rect.width;
+
+      if (!isInside) {
+        dialog.close();
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-copy-target]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const target = document.getElementById(button.dataset.copyTarget);
+      if (!target) return;
+
+      const text = target.textContent.trim();
+      const original = button.textContent;
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-999999px";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+        }
+
+        button.textContent = "Copied";
+        setTimeout(() => {
+          button.textContent = original;
+        }, 1600);
+      } catch (error) {
+        button.textContent = "Failed";
+        setTimeout(() => {
+          button.textContent = original;
+        }, 1600);
+      }
+    });
+  });
+})();
+</script>
+{% endblock %}

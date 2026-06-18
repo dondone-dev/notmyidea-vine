@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block extra_head %}
+<style>
+#cusdis-section {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+  overflow: visible;
+  margin-bottom: 1em;
+}
+#cusdis_thread iframe {
+  min-height: 350px;
+  width: 100%;
+  border: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="content" class="body">
+  <h1 class="entry-title">{{ page.title }}</h1>
+  {{ page.content }}
+</section>
+{% endblock %}
+
+{% block extras_section %}
+<section id="cusdis-section" class="body">
+  <div id="cusdis_thread"
+    data-host="https://cusdis.com"
+    data-app-id="13a14016-0ef0-4d1a-a9f0-c5fa4cab2172"
+    data-page-id="{{ page.slug }}"
+    data-page-url="{{ SITEURL }}/{{ page.url }}"
+    data-page-title="{{ page.title }}"></div>
+  <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+  <script>
+  (function () {
+    window.addEventListener('message', function (e) {
+      try {
+        var msg = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+      } catch (_) { return; }
+      if (msg.from !== 'cusdis') return;
+      if (msg.event !== 'resize') return;
+
+      var iframe = document.querySelector('#cusdis_thread iframe');
+      if (!iframe) return;
+      var h = parseInt(msg.data, 10);
+      if (h > 0) {
+        iframe.style.height = (h + 50) + 'px';
+        iframe.setAttribute('scrolling', 'no');
+      }
+    });
+  })();
+  </script>
+</section>
+{% endblock %}

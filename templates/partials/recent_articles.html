@@ -1,0 +1,15 @@
+{% set recent_n = RECENT_ARTICLES_COUNT|default(5) %}
+<section id="recent-articles-panel" class="body">
+  <button class="recent-toggle" id="recentToggle" aria-expanded="false" aria-controls="recentList">
+    <span class="recent-toggle-label">近期文章</span>
+    <span class="recent-toggle-chevron" aria-hidden="true"></span>
+  </button>
+  <div class="recent-list" id="recentList" hidden>
+    {% for article in articles[:recent_n] %}
+    <a href="{{ SITEURL }}/{{ article.url }}" class="recent-item">
+      <time class="recent-item-date" datetime="{{ article.date.isoformat() }}">{{ article.date.strftime('%m·%d') }}</time>
+      <span class="recent-item-title">{{ article.title }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>

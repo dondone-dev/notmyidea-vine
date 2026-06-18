@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="{{ DEFAULT_LANG }}">
+  <head>
+    {% set enable_image_hints = THEME_ENABLE_IMAGE_HINTS|default(true) %}
+    {% set enable_image_skeleton = THEME_ENABLE_IMAGE_SKELETON|default(true) %}
+    {% set homepage_image_ratio = THEME_HOMEPAGE_IMAGE_RATIO|default('1600 / 520') %}
+    {% set _ratio_parts = homepage_image_ratio.split('/') %}
+    {% set homepage_image_width = _ratio_parts[0]|trim %}
+    {% set homepage_image_height = _ratio_parts[1]|trim %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ SITENAME }}{%endblock%}</title>
+    <meta name="description" content="{% block meta_description %}{{ SITE_DESCRIPTION|default('') }}{% endblock %}">
+    <link rel="icon" href="{{ SITEURL }}/favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="{{ SITEURL }}/favicon.ico">
+    <link rel="canonical" href="{% block canonical_url %}{{ SITEURL }}{% endblock %}">
+    <meta property="og:site_name" content="{{ SITENAME }}">
+    <meta property="og:title" content="{% block og_title %}{{ SITENAME }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ SITE_DESCRIPTION|default('') }}{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}{{ SITEURL }}{% endblock %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/reset.css" />
+    <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/pygment.css" />
+    <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/fonts.css" />
+    <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/{{ CSS_FILE|default('main.css', true) }}" />
+    {% if output_file.endswith('memos.html') or (article and article.category.slug == 'memos') %}
+    <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/memos.css" />
+    {% endif %}
+    {% if FEED_ALL_ATOM %}
+    <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
+    {% endif %}
+    {% if FEED_ALL_RSS %}
+    <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
+    {% endif %}
+
+    {% block extra_head %}{% endblock %}
+  </head>
+
+  <body id="index" class="home" data-theme-static="{{ SITEURL }}/{{ THEME_STATIC_DIR }}" style="--homepage-image-ratio: {{ homepage_image_ratio }};">
+    {% include 'partials/github.html' %}
+    <header id="banner" class="body">
+      <h1><a href="{{ SITEURL }}/">{{ SITENAME }} {% if SITESUBTITLE %} <strong>{{ SITESUBTITLE }}</strong>{% endif %}</a></h1>
+      
+      <!-- 统一导航菜单 -->
+      <nav>
+        <ul>
+          {% for title, link in MENUITEMS %}
+          <li{% if (link == '/' and output_file == 'index.html') or (link != '/' and output_file.startswith(link.lstrip('/').rstrip('.html'))) %} class="active"{% endif %}><a href="{{ link }}">{{ title }}</a></li>
+          {% endfor %}
+          {% if DISPLAY_PAGES_ON_MENU -%}
+          {% for pg in pages %}
+          <li{% if pg == page %} class="active"{% endif %}><a href="{{ SITEURL }}/{{ pg.url }}">{{ pg.title }}</a></li>
+          {% endfor %}
+          {% endif %}
+          {% if DISPLAY_CATEGORIES_ON_MENU -%}
+          {% for cat, null in categories %}
+          <li{% if cat == category %} class="active"{% endif %}><a href="{{ SITEURL }}/{{ cat.url }}">{{ cat }}</a></li>
+          {% endfor %}
+          {% endif %}
+        </ul>
+      </nav>
+      
+    </header><!-- /#banner -->
+    {% block content %}
+    {% endblock %}
+    {% block extras_section %}
+    {% if not (output_file.endswith('memos.html') or output_file.endswith('more.html')) %}
+    {% set page_disable_default_comments = page and (page.no_default_comments or page.disable_default_comments) %}
+    {% set lazy_comments_enabled = THEME_ENABLE_LAZY_COMMENTS|default(true) and ((article and article.status != "draft") or page) and not page_disable_default_comments %}
+    {% if lazy_comments_enabled or LINKS %}
+    <section id="extras" class="body">
+
+      {% if lazy_comments_enabled %}
+      <div class="BtnGroup">
+        <button
+          id="loadCommentsBtn"
+          class="BtnGroup-item btn"
+          data-container-id="commentsContainer"
+          data-giscus-src="https://giscus.app/client.js"
+          data-repo="{{ GISCUS_REPO|default('') }}"
+          data-repo-id="{{ GISCUS_REPO_ID|default('') }}"
+          data-category="{{ GISCUS_CATEGORY|default('') }}"
+          data-category-id="{{ GISCUS_CATEGORY_ID|default('') }}"
+          data-mapping="{{ GISCUS_MAPPING|default('pathname') }}"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="light"
+          data-lang="{{ GISCUS_LANG|default(DEFAULT_LANG) }}">{{ _('点击加载评论') }}</button>
+      </div>
+      <div id="commentsContainer"></div>
+      {% endif %}
+
+      {% if LINKS %}
+      <div class="blogroll">
+        <h2>{{ LINKS_WIDGET_NAME | default('links') }}</h2>
+        <ul>
+          {% for name, link in LINKS %}
+          <li><a href="{{ link }}">{{ name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div><!-- /.blogroll -->
+      {% endif %}
+
+    </section>
+
+    {% if lazy_comments_enabled %}
+    <script defer src="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/js/comments-loader.js"></script>
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% endblock %}
+
+    {% if output_file == 'index.html' %}
+    {% include 'partials/recent_articles.html' %}
+    {% endif %}
+
+    <footer id="contentinfo" class="body">
+      {% if not (output_file.endswith('memos.html')) %}
+      <address id="about" class="vcard body">
+        <div class="footer-badges">
+          {% include 'partials/footer_badges.html' %}
+        </div>
+        <div class="footer-text">
+          Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. 
+        </div>
+      </address>
+      {% endif %}
+
+    </footer><!-- /#contentinfo -->
+
+    {% include 'partials/analytics.html' %}
+    {% include 'partials/adsense.html' %}
+        <!-- JavaScript Files -->
+        <script defer src="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/js/custom.js"></script>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+{% set analytics_idle = THEME_ANALYTICS_IDLE_LOAD|default(false) %}
+{% if ANALYTICS_GOOGLE_ENABLED|default(false) or ANALYTICS_VERCOUNT_ENABLED|default(false) or ANALYTICS_UMAMI_ENABLED|default(false) or ANALYTICS_GOATCOUNTER_ENABLED|default(false) %}
+<script defer>
+  (function () {
+    var shouldIdleLoad = {{ "true" if analytics_idle else "false" }};
+
+    function appendScript(src, attrs) {
+      var script = document.createElement("script");
+      script.src = src;
+
+      if (attrs) {
+        Object.keys(attrs).forEach(function (key) {
+          if (key === "defer" || key === "async") {
+            script[key] = attrs[key];
+          } else {
+            script.setAttribute(key, attrs[key]);
+          }
+        });
+      }
+
+      document.head.appendChild(script);
+    }
+
+    function runTask(task) {
+      if (shouldIdleLoad && "requestIdleCallback" in window) {
+        requestIdleCallback(task, { timeout: 2000 });
+        return;
+      }
+      task();
+    }
+
+    {% if ANALYTICS_GOOGLE_ENABLED|default(false) and ANALYTICS_GOOGLE_GA4_ID|default('') %}
+    appendScript("https://www.googletagmanager.com/gtag/js?id={{ ANALYTICS_GOOGLE_GA4_ID }}", { async: true });
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag("js", new Date());
+    gtag("config", "{{ ANALYTICS_GOOGLE_GA4_ID }}");
+    {% endif %}
+
+    {% if ANALYTICS_VERCOUNT_ENABLED|default(false) %}
+    runTask(function () {
+      appendScript("https://cn.vercount.one/js", { defer: true });
+    });
+    {% endif %}
+
+    {% if ANALYTICS_UMAMI_ENABLED|default(false) and ANALYTICS_UMAMI_WEBSITE_ID|default('') %}
+    runTask(function () {
+      appendScript(
+        "{{ ANALYTICS_UMAMI_SCRIPT_URL|default('https://cloud.umami.is/script.js') }}",
+        { defer: true, "data-website-id": "{{ ANALYTICS_UMAMI_WEBSITE_ID }}" }
+      );
+    });
+    {% endif %}
+
+    {% if ANALYTICS_GOATCOUNTER_ENABLED|default(false) and ANALYTICS_GOATCOUNTER_CODE|default('') %}
+    runTask(function () {
+      appendScript(
+        "{{ ANALYTICS_GOATCOUNTER_SCRIPT_URL|default('//gc.zgo.at/count.js') }}",
+        { async: true, "data-goatcounter": "https://{{ ANALYTICS_GOATCOUNTER_CODE }}.goatcounter.com/count" }
+      );
+    });
+    {% endif %}
+  })();
+</script>
+{% endif %}
