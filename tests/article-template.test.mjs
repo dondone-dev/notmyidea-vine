@@ -7,15 +7,12 @@ const articleTemplate = readFileSync(
   "utf8"
 );
 
-test("kitchen and technology articles opt into shared media layout hooks", () => {
+test("all articles opt into shared media layout hooks regardless of category", () => {
   assert.match(articleTemplate, /article\.category\.slug == 'kitchen'/);
   assert.match(articleTemplate, /article\.category\.slug == 'technology'/);
   assert.match(
     articleTemplate,
-    /media_layout_categories = \['memos', 'photos', 'kitchen', 'technology'\]/
+    /<div class="entry-content" data-media-layouts="true">/
   );
-  assert.match(
-    articleTemplate,
-    /article\.category\.slug in media_layout_categories/
-  );
+  assert.doesNotMatch(articleTemplate, /media_layout_categories/);
 });

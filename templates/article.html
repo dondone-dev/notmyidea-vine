@@ -19,8 +19,7 @@
       {% include 'partials/twitter.html' %}
     </header>
 
-    {% set media_layout_categories = ['memos', 'photos', 'kitchen', 'technology'] %}
-    <div class="entry-content"{% if article.category and article.category.slug in media_layout_categories %} data-media-layouts="true"{% endif %}>
+    <div class="entry-content" data-media-layouts="true">
       {% include 'article_infos.html' %}
       
       {% if article.cover_url %}
